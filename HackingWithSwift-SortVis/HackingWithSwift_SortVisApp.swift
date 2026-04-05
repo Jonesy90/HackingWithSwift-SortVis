@@ -13,5 +13,6 @@ struct HackingWithSwift_SortVisApp: App {
         WindowGroup {
             ContentView()
         }
+        .windowStyle(.hiddenTitleBar)
     }
 }
