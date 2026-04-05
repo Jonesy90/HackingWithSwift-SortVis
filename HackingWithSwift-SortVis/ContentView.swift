@@ -10,6 +10,14 @@ internal import Combine
 
 struct ContentView: View {
     /*
+     An enum to allow us to switch between different sort types.
+    */
+    enum SortTypes: String, CaseIterable {
+        case bubble = "Bubble Sort"
+        case insertion = "Insertion Sort"
+    }
+    
+    /*
      1. Give me the range between 1 to 100.
      2. Run each number though a function (in this case it's the SortValue initialiser. This function must accept one number.
      3. Then shuffles the entire array [SortValues].
@@ -21,6 +29,12 @@ struct ContentView: View {
     
     // A property to work alongside the Slider View in the body.
     @State private var timerSpeed = 0.1
+    
+    // A property to track the current insertion sort position.
+    @State private var insertionSortPosition = 1
+    
+    // A property to store the current sortFunction.
+    @State private var sortFunction = SortTypes.bubble
     
     var body: some View {
         VStack(spacing: 20) {
@@ -45,6 +59,13 @@ struct ContentView: View {
             }
             .padding(.bottom)
             
+            Picker("Sort Types", selection: $sortFunction) {
+                ForEach(SortTypes.allCases, id: \.self) {
+                    Text($0.rawValue)
+                }
+            }
+            .pickerStyle(.segmented)
+            
             HStack(spacing: 20) {
                 LabeledContent("Speed") {
                     Slider(value: $timerSpeed, in: 0...1)
@@ -57,6 +78,7 @@ struct ContentView: View {
                 Button("Shuffle") {
                     withAnimation {
                         values.shuffle()
+                        insertionSortPosition = 1 // Whenever we shuffle the array, the insertionSortPosition property needs to be reset.
                     }
                 }
             }
@@ -83,10 +105,15 @@ struct ContentView: View {
     }
     
     
-    /// A method the calls the bubbleSort method on the values in [SortVis] array. This only applies one step.
+    /// A method that applies the correct sort method depending on the sortFunction property value.
     func step() {
         withAnimation {
-            values.bubbleSort()
+            switch sortFunction {
+            case .bubble:
+                values.bubbleSort()
+            case .insertion:
+                insertionSortPosition = values.insertionSort(startPosition: insertionSortPosition)
+            }
         }
     }
 }

@@ -21,4 +21,24 @@ extension Array where Element: Comparable {
             }
         }
     }
+    
+    /*
+     InsertionSort is the closest to what humans do when they manually sort data. If we had an empty array in one place and an unsorted array in another, this works by moving through the items in the unsorted array and moving them into their correct positions in the sorted array.
+     
+     This works by picking out one item from the array, and moving it downwards in the array until it reaches an item it has sorted before.
+    */
+    mutating func insertionSort(startPosition: Int) -> Int {
+        guard startPosition < count else { return startPosition }
+        
+        let itemToPlace = self[startPosition]
+        var currentItemIndex = startPosition
+        
+        while currentItemIndex > 0 && itemToPlace < self[currentItemIndex - 1] {
+            self[currentItemIndex] = self[currentItemIndex - 1]
+            currentItemIndex -= 1
+        }
+        
+        self[currentItemIndex] = itemToPlace
+        return startPosition + 1
+    }
 }
