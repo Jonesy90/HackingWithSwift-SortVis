@@ -15,6 +15,7 @@ struct ContentView: View {
     enum SortTypes: String, CaseIterable {
         case bubble = "Bubble Sort"
         case insertion = "Insertion Sort"
+        case quick = "Quicksort"
     }
     
     /*
@@ -113,6 +114,8 @@ struct ContentView: View {
                 values.bubbleSort()
             case .insertion:
                 insertionSortPosition = values.insertionSort(startPosition: insertionSortPosition)
+            case .quick:
+                values.quickSort()
             }
         }
     }

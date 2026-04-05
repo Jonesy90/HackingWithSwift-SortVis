@@ -41,4 +41,20 @@ extension Array where Element: Comparable {
         self[currentItemIndex] = itemToPlace
         return startPosition + 1
     }
+    
+    /*
+     Quicksort is one of the most common sorting algorithms, it works by selecting a value at a random index in the array (called a Pivot Point) and dividing all the remaining data into three sections (objects before, after and are the same).
+     
+     It repeats this process for the before an after values and happens recursively until we're down to a single object, at which point the result can be stitched back together.
+    */
+    mutating func quickSort() {
+        guard count > 1 else { return } // Exits if the array is empty.
+        
+        let pivot = self[Int.random(in: 0..<count)] // A random index pivot point in the array.
+        let before = self.filter { $0 < pivot } // Looks at the entire array and creates a new array of all the elements which are before the pivot point value.
+        let after = self.filter { $0 > pivot } // Looks at the entire array and creates a new array of all the elements which are after the pivot point value.
+        let equal = self.filter { $0 == pivot } // Looks at the entire array and creates a new array of all the elements that equal the pivot point value.
+        
+        self = before + equal + after
+    }
 }
