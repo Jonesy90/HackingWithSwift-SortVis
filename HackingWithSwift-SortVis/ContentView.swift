@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+internal import Combine
 
 struct ContentView: View {
     /*
@@ -14,6 +15,12 @@ struct ContentView: View {
      3. Then shuffles the entire array [SortValues].
     */
     @State private var values = (1...100).map(SortValue.init).shuffled()
+    
+    // A timer property that can be watched and actioned upon.
+    @State private var timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    
+    // A property to work alongside the Slider View in the body.
+    @State private var timerSpeed = 0.1
     
     var body: some View {
         VStack(spacing: 20) {
@@ -37,9 +44,50 @@ struct ContentView: View {
                 }
             }
             .padding(.bottom)
+            
+            HStack(spacing: 20) {
+                LabeledContent("Speed") {
+                    Slider(value: $timerSpeed, in: 0...1)
+                }
+                .frame(maxWidth: 400)
+                
+                Button("Step", action: step) // a button that triggers one BubbleSort step.
+                
+                // A button to shuffle the values stored in the values array [SortVis].
+                Button("Shuffle") {
+                    withAnimation {
+                        values.shuffle()
+                    }
+                }
+            }
         }
         .padding()
         .frame(minWidth: 500, minHeight: 400)
+        
+        // This executes the 'step' function every time the timer property fires.
+        .onReceive(timer) { _ in
+            step()
+        }
+        
+        /*
+         1. If the 'timerSpeed' property value changes, stop the timer property from firing.
+         2. If the 'timerSpeed' is not equal to 0, then restart the timer property with the new 'timerSpeed' passed in via the slider.
+        */
+        .onChange(of: timerSpeed) {
+            timer.upstream.connect().cancel()
+            
+            if timerSpeed != 0 {
+                timer = Timer.publish(every: timerSpeed, on: .main, in: .common).autoconnect()
+            }
+        }
+    }
+    
+    
+    /// A method the calls the bubbleSort method on the values in [SortVis] array. This only applies one step.
+    func step() {
+        withAnimation {
+            values.bubbleSort()
+        }
     }
 }
 
