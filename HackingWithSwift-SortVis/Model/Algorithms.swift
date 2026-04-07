@@ -57,4 +57,23 @@ extension Array where Element: Comparable {
         
         self = before + equal + after
     }
+    
+    /*
+     Selection Sort is a comparison-based sorting algorithm. It sorts by repeatedly selecting the smallest (or largest) element in the unsorted portion and swapping it out with the first unsorted element.
+     1. Find the smallest element and swap it with the first element. This way we get the smallest element in the correct position.
+     2. Then find the smallest among the remaining elements (or second smallest) and swap it with the second element.
+     3. Repeat until all the elements have been moved into the correct position.
+    */
+    mutating func selectSort(startPosition: Int) -> Int {
+        for i in startPosition..<self.count {
+            for j in (i)..<self.count {
+                if self[j] < self[startPosition] {
+                    swapAt(i, j)
+                }
+            }
+            return startPosition + 1
+        }
+        
+        return startPosition
+    }
 }
